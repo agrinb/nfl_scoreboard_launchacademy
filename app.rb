@@ -1,4 +1,7 @@
+require 'sinatra'
+require "shotgun"
 require 'pry'
+
 
 games = [
   {
@@ -52,6 +55,7 @@ games.each do |game|
   end
 end
 
+
 # populate record hash with wins and looses
 games.each do |game|
 # if home team won
@@ -74,6 +78,7 @@ games.each do |game|
       end
     end
   end
+  record
 end
 
 
@@ -82,21 +87,47 @@ end
 # Sort the record hash with the team with most winsat the top
 # if there is a tie the team with the fewer losses goes on top
 
+# record2 = record.sort_by { |team, team_record| -team_record[:wins]}
+# puts record2.sort_by { |team, team_record| team_record[:losses]}
 
-record.each do |team, record|
-  puts team[:wins]
+get '/' do
+  @show_record = record.sort_by { |team, team_record| [-team_record[:wins], team_record[:losses]] }
+  erb :index
 end
 
 
 
 
-
-
-
-
-
-
 ###################### TEAMS PAGE ########################
+
+
+def find_games(team)
+  team_games = []
+  games.each do |game|
+    if game[:home_team] == team || game[:away_team] == team
+      team_games << game
+    end
+  end
+  team_games
+end
+
+
+def find_record(team, record)
+  record.each do |db_team, team_record|
+    if team = db_team
+      team_record
+    end
+  end
+    team_record
+end
+
+get '/teams/:team' do
+  @team_record = find_record(params[:team])
+  @team_games = find_games(params[:game])
+  erb :team
+end
+
+
 
 # Get the team name from params hash
 # List the wins and losses for the team
