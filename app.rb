@@ -41,45 +41,62 @@ games = [
 # else
 # add one to away team wins and one to home team loss
 
-record = Hash.new(0)
-games.each do |game|
+#Instantiate record hash
+record = {}
 
-# add home and away team are in the record hash
-  unless record.keys.include?(game[:home_team])
-    wins_foo = { :wins => 0, :losses => 0 }
-    record.merge!(game[:home_team] => wins_foo )
+def create_record(games, record)
+  games.each do |game|
+  # add home and away team are in the record hash
+    unless record.keys.include?(game[:home_team])
+      wins_foo = { :wins => 0, :losses => 0 }
+      record.merge!(game[:home_team] => wins_foo )
+    end
+    unless record.keys.include?(game[:away_team])
+      wins_foo = { :wins => 0, :losses => 0 }
+      record.merge!(game[:away_team] => wins_foo )
+    end
   end
-  unless record.keys.include?(game[:away_team])
-    wins_foo = { :wins => 0, :losses => 0 }
-    record.merge!(game[:away_team] => wins_foo )
-  end
+record
 end
 
+#create_record(games, record)
 
+
+def fill_record(games, record)
 # populate record hash with wins and looses
-games.each do |game|
-# if home team won
-  if game[:home_score] > game[:away_score]
-    record.each do |team, record|
-      # add one to home wins and add one to away losses
-      if team == game[:home_team]
-        record[:wins] += 1
-      elsif team == game[:away_team]
-        record[:losses] += 1
-      end
-    end
-# if home team lost
-  else
-    record.each do |team, record|
-      if team == game[:home_team]
-          record[:losses] += 1
-      elsif team == game[:away_team]
+  games.each do |game|
+  # if home team won
+    if game[:home_score] > game[:away_score]
+      record.each do |team, record|
+  # add one to home wins and add one to away losses
+        if team == game[:home_team]
           record[:wins] += 1
+        elsif team == game[:away_team]
+          record[:losses] += 1
+        end
+      end
+  # if home team lost
+    else
+      record.each do |team, record|
+        if team == game[:home_team]
+            record[:losses] += 1
+        elsif team == game[:away_team]
+            record[:wins] += 1
+        end
       end
     end
   end
-  record
+ record
 end
+
+@record = {}
+
+def complete_record(games, record)
+  create_record(games, record)
+  fill_record(games, record)
+  @record = record
+end
+
 
 
 ##################### LEADERBOARD #########################
@@ -90,10 +107,6 @@ end
 # record2 = record.sort_by { |team, team_record| -team_record[:wins]}
 # puts record2.sort_by { |team, team_record| team_record[:losses]}
 
-get '/' do
-  @show_record = record.sort_by { |team, team_record| [-team_record[:wins], team_record[:losses]] }
-  erb :index
-end
 
 
 
@@ -101,7 +114,11 @@ end
 ###################### TEAMS PAGE ########################
 
 
-def find_games(team)
+
+@team_record = nil
+@team_games = nil
+
+def find_games(team, games)
   team_games = []
   games.each do |game|
     if game[:home_team] == team || game[:away_team] == team
@@ -112,19 +129,31 @@ def find_games(team)
 end
 
 
+
 def find_record(team, record)
+
   record.each do |db_team, team_record|
-    if team = db_team
-      team_record
-    end
+    @team_record = team_record if team == db_team
+    # if team = db_team
+    #   @team_record = team_record
+    # end
   end
-    team_record
+   @team_record
 end
 
+
+#recordfind_record("Patriots", complete_record(games, record))
+
 get '/teams/:team' do
-  @team_record = find_record(params[:team])
-  @team_games = find_games(params[:game])
-  erb :team
+  @team_record = find_record(params[:team], complete_record(games, record))
+  @team_games = find_games(params[:team], games)
+  erb :show
+end
+
+get '/' do
+  get_record = complete_record(games, record)
+  @show_record = get_record.sort_by { |team, team_record| [-team_record[:wins], team_record[:losses]] }
+  erb :index
 end
 
 

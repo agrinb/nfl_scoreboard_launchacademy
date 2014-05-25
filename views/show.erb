@@ -1,11 +1,11 @@
 
 
-  <% team_record.each do |record| %>
-  <%= record[:wins] record[:losses] %>
-  <% end %>
 
-  <% team_games.each do |game| %>
- @home <%=  game[:home_team] game[:home_score] %>
-  <%= game[:away_team] game[:away_score] %>
-  <% end %>
+  <%= "#{@team_record[:wins]} #{@team_record[:losses]}" %>
+
+
+ <% @team_games.each do |game| %>
+ @home <%=  "#{game[:home_team]} #{game[:home_score]}" %>
+<%= "#{game[:away_team]} #{game[:away_score]}" %>
+ <% end %>
 
