@@ -1,11 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= @team %> Statistics</title>
+  </head>
+  <body>
+    <div>
+      <h2><%= @team %> Statistics</h2>
+    </div>
 
+  <div>
+<h3><%= @team %> Record</h3>
+</div>
+<div>
+<span><strong>Win: </strong> </span><span><%= "#{@team_record[:wins]}" %></span> <br>
+<span><strong>Loss: </strong></span><span><%= "#{@team_record[:losses]}" %></span>
+</div>
+<div>
+<h3><%= @team %> Games</h3>
+<ul>
+<% @team_games.each do |game| %>
+<li> (home)<strong> <%=  "#{game[:home_team]}"%></strong><%=" #{game[:home_score]}" %>
+(away)<strong> <%= "#{game[:away_team]}"%></strong><%=" #{game[:away_score]}" %>
+<% end %>
+</li>
 
-
-  <%= "#{@team_record[:wins]} #{@team_record[:losses]}" %>
-
-
- <% @team_games.each do |game| %>
- @home <%=  "#{game[:home_team]} #{game[:home_score]}" %>
-<%= "#{game[:away_team]} #{game[:away_score]}" %>
- <% end %>
+</ul>
+</body>
+</html>
 

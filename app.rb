@@ -118,33 +118,40 @@ end
 @team_record = nil
 @team_games = nil
 
-def find_games(team, games)
+# def find_games(team, games)
+#   team_games = []
+#   games.each do |game|
+#     if game[:home_team] == team || game[:away_team] == team
+#       team_games << game
+#     end
+#   end
+#   team_games
+#   binding.pry
+# end
+
+def find_games(param_team, games)
   team_games = []
-  games.each do |game|
-    if game[:home_team] == team || game[:away_team] == team
-      team_games << game
+    games.each do |game|
+      if game[:home_team] == param_team || game[:away_team] == param_team
+        team_games << game
+      end
     end
-  end
   team_games
 end
 
 
 
 def find_record(team, record)
-
   record.each do |db_team, team_record|
     @team_record = team_record if team == db_team
-    # if team = db_team
-    #   @team_record = team_record
-    # end
   end
    @team_record
 end
 
 
-#recordfind_record("Patriots", complete_record(games, record))
 
 get '/teams/:team' do
+  @team = params[:team]
   @team_record = find_record(params[:team], complete_record(games, record))
   @team_games = find_games(params[:team], games)
   erb :show

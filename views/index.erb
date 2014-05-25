@@ -1,18 +1,51 @@
-<%  @show_record.each do |team_record| %>
-<%= team_record %>
-<% end %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NFL Leaderboard</title>
+  </head>
+  <body>
+    <div>
+      <h2>NFL.com Post-apocalyptic Version</h2>
+    </div>
+  <div>
+    <p>
+      <%  @show_record.each do |team_record| %>
+      <a href= "/teams/<%= team_record.first %>"><%= team_record.first %></a>
+      <% end %>
+    </p>
+    <br>
+  </div>
+  <div>
+<h3>NFL Leaderboard</h3>
+</div>
+    <table>
+      <thead>
+        <tr>
+        <th>Team</th>
+        <th>Win</th>
+        <th>Loss</th>
+        </tr>
+      </thead>
+      <tbody>
+      <%  @show_record.each do |team_record| %>
+          <tr>
+          <td><%= team_record.first %>:</td>
+          <td> <%= team_record[1][:wins] %></td>
+          <td> <%= team_record[1][:losses] %></td>
+           <% end %>
+           <br>
+          </tr>
+
+      </tbody>
+    </table>
+  </body>
+</html>
 
 
-<br>
-<br>
-<br>
 
-<%  @show_record.each do |team_record| %>
-<%= team_record.first %>: Win: <%= team_record[1][:wins] %> Loss: <%= team_record[1][:losses] %>  <br>
-<% end %>
-<br>
 
-<%  @show_record.each do |team_record| %>
-<%= team_record[1][:wins] %> <br>
-<% end %>
+
+
+
+
 
