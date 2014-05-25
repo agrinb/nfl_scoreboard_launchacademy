@@ -1,3 +1,18 @@
 <%  @show_record.each do |team_record| %>
-<%= "#{team_record}" %>
+<%= team_record %>
 <% end %>
+
+
+<br>
+<br>
+<br>
+
+<%  @show_record.each do |team_record| %>
+<%= team_record.first %>: Win: <%= team_record[1][:wins] %> Loss: <%= team_record[1][:losses] %>  <br>
+<% end %>
+<br>
+
+<%  @show_record.each do |team_record| %>
+<%= team_record[1][:wins] %> <br>
+<% end %>
+
